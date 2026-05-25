@@ -47,5 +47,3 @@ cd expense-tracker
 Database:
 Make sure PostgreSQL is running on your local machine and create a database as specified in your application properties.
 
-## Screenshots
-*(Add screenshots of the application here)*
