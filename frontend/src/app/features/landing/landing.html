@@ -1,0 +1,91 @@
+<div class="landing-page">
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="glow-orb orb-3"></div>
+
+  <nav class="landing-nav">
+    <div class="logo">
+      <div class="logo-icon">
+        <lucide-icon [img]="icons.Wallet" [size]="24"></lucide-icon>
+      </div>
+      <span class="logo-text">ExpenseTracker</span>
+    </div>
+    <div class="nav-actions">
+      <a routerLink="/login" class="btn-outline nav-btn">
+        <lucide-icon [img]="icons.LogIn" [size]="18"></lucide-icon>
+        Log In
+      </a>
+      <a routerLink="/signup" class="btn-primary nav-btn">
+        <lucide-icon [img]="icons.UserPlus" [size]="18"></lucide-icon>
+        Sign Up
+      </a>
+    </div>
+  </nav>
+
+  <main class="hero">
+    <div class="hero-content">
+      <div class="badge">
+        <lucide-icon [img]="icons.Sparkles" [size]="14"></lucide-icon>
+        YOUR MONEY, BEAUTIFULLY TRACKED
+      </div>
+      
+      <h1 class="hero-title">
+        Spend smarter.<br>
+        <span class="text-gradient">Save effortlessly.</span>
+      </h1>
+      
+      <p class="hero-subtitle">
+        The expense tracker that turns chaos into clarity — with
+        gorgeous insights and zero spreadsheet drama.
+      </p>
+      
+      <div class="hero-cta">
+        <a routerLink="/signup" class="btn-primary cta-btn">
+          Get Started
+          <lucide-icon [img]="icons.ArrowRight" [size]="20"></lucide-icon>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-3d-visual">
+      <div class="scene">
+        <div class="card card-1">
+          <div class="card-header">
+            <lucide-icon [img]="icons.TrendingUp" [size]="24"></lucide-icon>
+            <span>Analytics</span>
+          </div>
+          <div class="card-body">
+            <div class="bar-chart">
+              <div class="bar" style="height: 60%"></div>
+              <div class="bar" style="height: 80%"></div>
+              <div class="bar" style="height: 40%"></div>
+              <div class="bar" style="height: 100%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-2">
+          <div class="card-header">
+            <lucide-icon [img]="icons.PieChart" [size]="24"></lucide-icon>
+            <span>Overview</span>
+          </div>
+          <div class="card-body">
+            <div class="circle">
+              <div class="inner-circle"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-3">
+          <div class="card-header">
+            <lucide-icon [img]="icons.Wallet" [size]="24"></lucide-icon>
+            <span>Balance</span>
+          </div>
+          <div class="card-body">
+            <div class="balance-text">&#8377;45,200.00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

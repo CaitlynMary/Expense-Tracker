@@ -1,0 +1,26 @@
+# Angular
+frontend/node_modules/
+frontend/.angular/
+frontend/dist/
+frontend/.cache/
+frontend/coverage/
+
+# Spring Boot
+expense-tracker/target/
+expense-tracker/logs/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Environment / Secrets
+.env
+application-local.properties
+application-dev.properties
+jwt.secret
+credentials.json
+secrets.properties

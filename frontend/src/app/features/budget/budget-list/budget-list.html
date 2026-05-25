@@ -1,0 +1,118 @@
+<div class="page-shell animate-fade-in">
+  <div class="page-header">
+    <div class="page-copy">
+      <h1 class="page-title">Budgets</h1>
+      <p class="page-subtitle">Set monthly limits and category allocations.</p>
+    </div>
+    <button class="btn-primary" (click)="toggleForm()">
+      <lucide-icon [img]="icons.Plus" size="20"></lucide-icon>
+      Add Budget
+    </button>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-alert">{{ errorMessage }}</div>
+
+  <div *ngIf="showForm" class="premium-card stack-md">
+    <div class="card-copy">
+      <h2 class="card-title">{{ isEditing ? 'Edit Budget' : 'New Budget' }}</h2>
+      <p class="section-note">Define your monthly limit and optional category caps.</p>
+    </div>
+
+    <form [formGroup]="budgetForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Month</label>
+          <input type="number" formControlName="month" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Year</label>
+          <input type="number" formControlName="year" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Total Limit</label>
+          <input type="number" step="0.01" formControlName="totalLimit" class="form-control">
+        </div>
+      </div>
+
+      <div formArrayName="categoryBudgets" class="list-stack">
+        <div *ngFor="let group of categoryBudgets.controls; let i = index" [formGroupName]="i" class="list-row">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <input formControlName="category" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Limit</label>
+              <input type="number" step="0.01" formControlName="limitAmount" class="form-control">
+            </div>
+          </div>
+          <button type="button" class="btn-icon danger" (click)="removeCategoryBudget(i)">
+            <lucide-icon [img]="icons.Trash2" size="18"></lucide-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-outline" (click)="addCategoryBudget()">Add Category Limit</button>
+        <button type="button" class="btn-outline" (click)="toggleForm()">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="budgetForm.invalid || isSaving">
+          {{ isSaving ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="isLoading" class="premium-card empty-state surface-empty">
+    Loading budgets...
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && budgets.length > 0" class="card-grid compact">
+    <div *ngFor="let budget of budgets" class="premium-card stack-md">
+      <div class="card-header-row">
+        <div class="card-copy">
+          <h3 class="card-title">{{ budget.month }}/{{ budget.year }}</h3>
+          <p class="card-subtitle">Monthly budget</p>
+        </div>
+        <div class="icon-box">
+          <lucide-icon [img]="icons.Wallet" size="22"></lucide-icon>
+        </div>
+      </div>
+
+      <div class="metric-list">
+        <div class="metric-row">
+          <span>Total</span>
+          <strong>&#8377;{{ budget.totalLimit | number:'1.2-2' }}</strong>
+        </div>
+        <div class="metric-row">
+          <span>Spent</span>
+          <strong>&#8377;{{ budget.totalSpent || 0 | number:'1.2-2' }}</strong>
+        </div>
+        <div class="metric-row">
+          <span>Remaining</span>
+          <strong>&#8377;{{ budget.remainingBudget || budget.totalLimit | number:'1.2-2' }}</strong>
+        </div>
+      </div>
+
+      <div class="row-actions">
+        <button class="btn-icon btn-edit" title="Edit" (click)="editBudget(budget)">
+          <lucide-icon [img]="icons.Edit" size="18"></lucide-icon>
+        </button>
+        <button class="btn-icon btn-delete" title="Delete" (click)="deleteBudget(budget.id!)">
+          <lucide-icon [img]="icons.Trash2" size="18"></lucide-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && budgets.length === 0" class="premium-card empty-state surface-empty">
+    No budgets found.
+  </div>
+
+  <app-confirm-modal
+    [isOpen]="showDeleteModal"
+    title="Delete Budget?"
+    message="Are you sure you want to delete this budget? This action cannot be undone."
+    (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()">
+  </app-confirm-modal>
+</div>

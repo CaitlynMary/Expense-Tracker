@@ -1,0 +1,349 @@
+{
+	"info": {
+		"name": "Family Expense Tracker - Bill Module",
+		"description": "Complete API collection for the Bill module of the Family Expense Tracker application.\n\n## Setup Instructions\n1. First, call the Login/Signup endpoint from your Auth collection\n2. Copy the JWT token from the response\n3. Set the `token` variable in this collection to the JWT value\n\nAll bill endpoints require JWT authentication.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "YOUR_JWT_TOKEN_HERE",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"description": "Authentication endpoints to obtain JWT token",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Family Admin\",\n    \"email\": \"family@example.com\",\n    \"password\": \"Password@123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/signup",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "signup"]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"    console.log('Token saved automatically!');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"family@example.com\",\n    \"password\": \"Password@123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"    console.log('Token saved automatically!');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Bills",
+			"description": "Bill CRUD operations - All endpoints require JWT Bearer token",
+			"item": [
+				{
+					"name": "1. Create Bill (Pending)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Electricity Bill\",\n    \"amount\": 120.50,\n    \"dueDate\": \"2026-06-15\",\n    \"frequency\": \"MONTHLY\",\n    \"notes\": \"Monthly utility power bill\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/bills",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bills"]
+						}
+					}
+				},
+				{
+					"name": "2. Create Bill (Overdue Candidate)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Internet Subscription\",\n    \"amount\": 59.99,\n    \"dueDate\": \"2026-05-01\",\n    \"frequency\": \"MONTHLY\",\n    \"notes\": \"Broadband fiber line\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/bills",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bills"]
+						}
+					}
+				},
+				{
+					"name": "3. Create Bill (Already Paid)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Annual Domain Renewal\",\n    \"amount\": 15.00,\n    \"dueDate\": \"2026-05-18\",\n    \"paidDate\": \"2026-05-18\",\n    \"status\": \"PAID\",\n    \"frequency\": \"YEARLY\",\n    \"notes\": \"Renew domain name\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/bills",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bills"]
+						}
+					}
+				},
+				{
+					"name": "4. Get All Bills",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/bills",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bills"]
+						}
+					}
+				},
+				{
+					"name": "5. Get Bill by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/bills/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bills", "1"]
+						}
+					}
+				},
+				{
+					"name": "6. Get Upcoming Bills",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/bills/upcoming",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bills", "upcoming"]
+						}
+					}
+				},
+				{
+					"name": "7. Get Overdue Bills",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/bills/overdue",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bills", "overdue"]
+						}
+					}
+				},
+				{
+					"name": "8. Update Bill Details",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Electricity Bill (Updated)\",\n    \"amount\": 135.00,\n    \"dueDate\": \"2026-06-18\",\n    \"frequency\": \"MONTHLY\",\n    \"notes\": \"Updated price electricity bill\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/bills/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bills", "1"]
+						}
+					}
+				},
+				{
+					"name": "9. Mark Bill as Paid",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/bills/2/mark-paid",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bills", "2", "mark-paid"]
+						}
+					}
+				},
+				{
+					"name": "10. Delete Bill",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/bills/3",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bills", "3"]
+						}
+					}
+				},
+				{
+					"name": "11. Create Bill - Validation Error (Error Test)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"\",\n    \"amount\": -10.00,\n    \"dueDate\": null,\n    \"frequency\": \"MONTHLY\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/bills",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bills"]
+						}
+					}
+				},
+				{
+					"name": "12. Get Non-Existent Bill (Error Test)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/bills/999",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "bills", "999"]
+						}
+					}
+				}
+			]
+		}
+	]
+}

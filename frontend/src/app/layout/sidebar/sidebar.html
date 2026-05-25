@@ -1,0 +1,41 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <div class="logo">
+      <div class="logo-icon text-gradient">
+        <lucide-icon [img]="icons.Wallet" [size]="28" [strokeWidth]="2.5"></lucide-icon>
+      </div>
+      <h1 *ngIf="!isCollapsed" class="logo-text text-gradient">Expense Tracker</h1>
+    </div>
+  </div>
+
+  <div class="sidebar-content">
+    <nav class="nav-menu">
+      <p class="nav-title" *ngIf="!isCollapsed">MAIN MENU</p>
+      <ul class="nav-list">
+        <li class="nav-item" *ngFor="let item of menuItems">
+          <a [routerLink]="item.route" routerLinkActive="active" class="nav-link">
+            <lucide-icon [img]="item.icon" [size]="20" class="nav-icon"></lucide-icon>
+            <span class="nav-label" *ngIf="!isCollapsed">{{ item.label }}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="sidebar-footer">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a routerLink="/settings" routerLinkActive="active" class="nav-link">
+          <lucide-icon [img]="icons.Settings" [size]="20" class="nav-icon"></lucide-icon>
+          <span class="nav-label" *ngIf="!isCollapsed">Settings</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link logout-link" (click)="logout()">
+          <lucide-icon [img]="icons.LogOut" [size]="20" class="nav-icon text-danger"></lucide-icon>
+          <span class="nav-label text-danger" *ngIf="!isCollapsed">Log Out</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>

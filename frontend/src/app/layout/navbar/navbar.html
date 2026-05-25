@@ -1,0 +1,88 @@
+<header class="navbar glass-panel">
+  <div class="navbar-left">
+    <button class="icon-btn" (click)="toggleSidebar()">
+      <lucide-icon [img]="icons.Menu" [size]="20"></lucide-icon>
+    </button>
+
+    <div class="search-shell">
+      <div class="search-bar">
+        <lucide-icon [img]="icons.Search" [size]="18" class="search-icon"></lucide-icon>
+        <input
+          #searchInput
+          type="text"
+          class="search-input"
+          [formControl]="searchControl"
+          placeholder="Search expenses and bills"
+          (focus)="openSearch()">
+      </div>
+
+      <div *ngIf="isSearchOpen" class="search-dropdown">
+        <div *ngIf="isSearching" class="search-empty">Searching...</div>
+
+        <ng-container *ngIf="!isSearching">
+          <button
+            *ngFor="let result of searchResults; trackBy: trackResult"
+            type="button"
+            class="search-result"
+            (click)="selectResult(result)">
+            <span class="result-icon">{{ resultIcon(result) }}</span>
+            <div class="result-copy">
+              <span class="result-title">{{ resultLabel(result) }} -> {{ result.title }}</span>
+              <span class="result-subtitle">
+                <span class="result-amount">{{ formatAmount(result.amount) }}</span>
+                <span *ngIf="result.subtitle"> • {{ result.subtitle }}</span>
+              </span>
+            </div>
+          </button>
+
+          <div *ngIf="hasSearched && searchResults.length === 0" class="search-empty">
+            No matching results found
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="navbar-right">
+    <div class="notification-shell">
+      <button class="icon-btn notification-btn" (click)="toggleNotifications($event)">
+        <lucide-icon [img]="icons.Bell" [size]="20"></lucide-icon>
+        <span *ngIf="unreadCount > 0" class="notification-badge">{{ unreadCount }}</span>
+      </button>
+
+      <div *ngIf="isNotificationsOpen" class="notification-dropdown">
+        <div class="notification-header">
+          <h3>🔔 Notifications</h3>
+          <button *ngIf="notifications.length > 0" class="btn-clear" (click)="markAllAsRead()">Mark all as read</button>
+        </div>
+
+        <div class="notification-body">
+          <div *ngIf="notifications.length === 0" class="notification-empty">
+            No notifications
+          </div>
+
+          <div *ngFor="let notif of notifications" class="notification-item">
+            <div class="notif-icon">
+              <span *ngIf="notif.type === 'ALERT'">❌</span>
+              <span *ngIf="notif.type === 'WARNING'">⚠️</span>
+              <span *ngIf="notif.type === 'INFO'">💡</span>
+            </div>
+            <div class="notif-content">
+              <strong>{{ notif.title }}</strong>
+              <p>{{ notif.message }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="user-profile">
+      <div class="avatar">
+        <lucide-icon [img]="icons.User" [size]="20"></lucide-icon>
+      </div>
+      <div class="user-info">
+        <span class="user-name">{{ displayUserName }}</span>
+        <span class="user-role">{{ displayUserEmail || 'Logged in' }}</span>
+      </div>
+    </div>
+  </div>
+</header>

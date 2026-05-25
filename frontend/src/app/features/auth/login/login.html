@@ -1,0 +1,49 @@
+<div class="auth-container">
+  <div class="auth-card premium-card animate-fade-in">
+    <div class="auth-header">
+      <div class="logo-icon text-gradient">
+        <lucide-icon [img]="icons.Wallet" [size]="48" [strokeWidth]="2.5"></lucide-icon>
+      </div>
+      <h2 class="auth-title">Welcome Back</h2>
+      <p class="auth-subtitle">Enter your details to access your account.</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form" autocomplete="off">
+      <!-- Hidden inputs to trick browser autofill -->
+      <input type="email" style="display:none" aria-hidden="true" autocomplete="email">
+      <input type="password" style="display:none" aria-hidden="true" autocomplete="current-password">
+      <div *ngIf="errorMessage" class="error-alert stagger-1">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-group stagger-2">
+        <label class="form-label">Email</label>
+        <div class="input-with-icon">
+          <lucide-icon [img]="icons.Mail" [size]="18" class="input-icon"></lucide-icon>
+          <input type="email" formControlName="email" class="form-control" placeholder="Enter your email" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="form-group stagger-3">
+        <div class="label-row">
+          <label class="form-label">Password</label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+        <div class="input-with-icon">
+          <lucide-icon [img]="icons.Lock" [size]="18" class="input-icon"></lucide-icon>
+          <input type="password" formControlName="password" class="form-control" placeholder="Enter your password" autocomplete="new-password">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary auth-submit stagger-4" [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="!isLoading">Sign In</span>
+        <span *ngIf="isLoading" class="spinner"></span>
+        <lucide-icon *ngIf="!isLoading" [img]="icons.ArrowRight" [size]="18"></lucide-icon>
+      </button>
+    </form>
+
+    <div class="auth-footer stagger-4">
+      <p>Don't have an account? <a routerLink="/signup" class="text-gradient">Sign up</a></p>
+    </div>
+  </div>
+</div>

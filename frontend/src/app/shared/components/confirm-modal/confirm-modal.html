@@ -1,0 +1,11 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="onCancel()">
+  <div class="modal-dialog premium-card animate-fade-in" (click)="$event.stopPropagation()">
+    <h3 class="modal-title">{{ title }}</h3>
+    <p class="modal-message">{{ message }}</p>
+    
+    <div class="modal-actions">
+      <button class="btn-outline" (click)="onCancel()">Cancel</button>
+      <button class="btn-primary" (click)="onConfirm()">Confirm</button>
+    </div>
+  </div>
+</div>

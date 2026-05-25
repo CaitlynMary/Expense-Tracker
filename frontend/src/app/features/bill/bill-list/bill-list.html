@@ -1,0 +1,131 @@
+<div class="page-shell animate-fade-in">
+  <div class="page-header">
+    <div class="page-copy">
+      <h1 class="page-title">Bills</h1>
+      <p class="page-subtitle">Keep track of recurring and upcoming bills.</p>
+    </div>
+    <button class="btn-primary" (click)="toggleForm()">
+      <lucide-icon [img]="icons.Plus" size="20"></lucide-icon>
+      Add Bill
+    </button>
+  </div>
+
+  <div *ngIf="toastMessage" class="premium-card toast-card" [class.success]="toastType === 'success'" [class.error]="toastType === 'error'">
+    {{ toastMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="error-alert">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="showForm" class="premium-card animate-fade-in stack-md">
+    <div class="card-copy">
+      <h2 class="card-title">{{ isEditing ? 'Edit Bill' : 'New Bill' }}</h2>
+      <p class="section-note">Save the due date, frequency, and amount for each bill.</p>
+    </div>
+
+    <form [formGroup]="billForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input type="text" formControlName="name" class="form-control" placeholder="e.g. Electricity Bill">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Amount</label>
+          <input type="number" step="0.01" formControlName="amount" class="form-control" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Due Date</label>
+          <input type="date" formControlName="dueDate" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bill Type</label>
+          <select formControlName="billType" class="form-control">
+            <option *ngFor="let type of billTypes" [value]="type.value">{{ type.label }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Frequency</label>
+          <select formControlName="frequency" class="form-control">
+            <option *ngFor="let frequency of frequencies" [value]="frequency.value">{{ frequency.label }}</option>
+          </select>
+        </div>
+        <div class="form-group field-span-full">
+          <label class="form-label">Notes</label>
+          <input type="text" formControlName="notes" class="form-control" placeholder="Any details...">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-outline" (click)="toggleForm()">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="billForm.invalid || isSaving">
+          {{ isSaving ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="isLoading" class="premium-card empty-state surface-empty">
+    Loading bills...
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && bills.length > 0" class="card-grid wide">
+    <div
+      *ngFor="let bill of bills"
+      class="premium-card stack-md"
+      [attr.id]="'bill-item-' + bill.id"
+      [class.search-highlight]="bill.id === highlightedBillId">
+      <div class="card-header-row">
+        <div class="row-main">
+          <div class="icon-box">
+            <lucide-icon [img]="icons.Calendar" size="22"></lucide-icon>
+          </div>
+          <div class="card-copy">
+            <h3 class="card-title">{{ bill.name }}</h3>
+            <div class="segmented-actions">
+              <span class="status-pill">{{ bill.status || 'PENDING' }}</span>
+              <span class="status-pill">{{ getBillTypeLabel(bill.billType) }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="amount-success">&#8377;{{ bill.amount | number:'1.2-2' }}</div>
+      </div>
+
+      <div class="metric-list">
+        <div class="metric-row">
+          <span>Next Due</span>
+          <strong>{{ bill.dueDate | date:'mediumDate' }}</strong>
+        </div>
+        <div class="metric-row">
+          <span>Frequency</span>
+          <strong>{{ getFrequencyLabel(bill.frequency) }}</strong>
+        </div>
+      </div>
+
+      <div class="row-actions">
+        <button *ngIf="bill.status !== 'PAID'" class="btn-outline" (click)="markAsPaid(bill.id!)">
+          <lucide-icon [img]="icons.CheckCircle" size="18"></lucide-icon>
+          Mark Paid
+        </button>
+        <button class="btn-icon btn-edit" title="Edit" (click)="editBill(bill)">
+          <lucide-icon [img]="icons.Edit" size="18"></lucide-icon>
+        </button>
+        <button class="btn-icon btn-delete" title="Delete" (click)="deleteBill(bill.id!)">
+          <lucide-icon [img]="icons.Trash2" size="18"></lucide-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && bills.length === 0" class="premium-card empty-state surface-empty">
+    No bills found.
+  </div>
+
+  <app-confirm-modal
+    [isOpen]="showDeleteModal"
+    title="Delete Bill?"
+    message="Are you sure you want to delete this bill? This action cannot be undone."
+    (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()">
+  </app-confirm-modal>
+</div>

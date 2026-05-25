@@ -1,0 +1,86 @@
+<div class="page-shell animate-fade-in">
+  <div class="page-header">
+    <div class="page-copy">
+      <h1 class="page-title">Categories</h1>
+      <p class="page-subtitle">Manage your expense and budget categories.</p>
+    </div>
+    <button class="btn-primary" (click)="toggleForm()">
+      <lucide-icon [img]="icons.Plus" size="20"></lucide-icon>
+      Add Category
+    </button>
+  </div>
+
+  <div *ngIf="showForm" class="premium-card animate-fade-in stack-md">
+    <div class="card-copy">
+      <h2 class="card-title">{{ isEditing ? 'Edit Category' : 'New Category' }}</h2>
+      <p class="section-note">Keep names, icons, and colors consistent across the app.</p>
+    </div>
+
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input type="text" formControlName="name" class="form-control" placeholder="e.g. Travel">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Icon (Emoji)</label>
+          <input type="text" formControlName="icon" class="form-control" placeholder="e.g. ✈️">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Color</label>
+          <input type="color" formControlName="colorHex" class="form-control color-control">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-outline" (click)="toggleForm()">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="categoryForm.invalid || isSaving">
+          {{ isSaving ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-alert">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="isLoading" class="premium-card empty-state surface-empty">
+    Loading categories...
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && categories.length === 0" class="premium-card empty-state surface-empty">
+    No categories found.
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && categories.length > 0" class="card-grid compact">
+    <div *ngFor="let category of categories" class="premium-card card-header-row">
+      <div class="row-main">
+        <div class="icon-box" [style.background-color]="category.colorHex + '20'" [style.color]="category.colorHex">
+          {{ category.icon || '📁' }}
+        </div>
+        <div class="card-copy">
+          <h3 class="card-title">{{ category.name }}</h3>
+          <span *ngIf="category.isDefault" class="status-pill">Default</span>
+        </div>
+      </div>
+
+      <div class="row-actions" *ngIf="!category.isDefault">
+        <button class="btn-icon btn-edit" title="Edit" (click)="editCategory(category)">
+          <lucide-icon [img]="icons.Edit" size="18"></lucide-icon>
+        </button>
+        <button class="btn-icon btn-delete" title="Delete" (click)="deleteCategory(category.id!)">
+          <lucide-icon [img]="icons.Trash2" size="18"></lucide-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <app-confirm-modal
+    [isOpen]="showDeleteModal"
+    title="Delete Category?"
+    message="Are you sure you want to delete this category? This action cannot be undone."
+    (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()">
+  </app-confirm-modal>
+</div>

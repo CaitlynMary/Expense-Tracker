@@ -1,0 +1,131 @@
+<div class="settings-page animate-fade-in">
+  <div class="settings-header">
+    <div class="page-copy">
+      <h1 class="page-title">Settings</h1>
+      <p class="page-subtitle">Manage your profile, preferences, and account.</p>
+    </div>
+  </div>
+
+  <div *ngIf="actionMessage" class="settings-toast premium-card">
+    {{ actionMessage }}
+  </div>
+
+  <div class="settings-grid">
+    <section class="premium-card settings-card">
+      <div class="card-header">
+        <div class="card-icon user"><lucide-icon [img]="icons.UserRound" [size]="20"></lucide-icon></div>
+        <div>
+          <h2>Profile Information</h2>
+          <p>Your account details</p>
+        </div>
+      </div>
+
+      <div class="info-list">
+        <div class="info-row">
+          <span>Full Name</span>
+          <strong>{{ userName }}</strong>
+        </div>
+        <div class="info-row">
+          <span>Email</span>
+          <strong>{{ userEmail }}</strong>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button type="button" class="btn-outline" (click)="editProfile()">
+          <lucide-icon [img]="icons.Pencil" [size]="16"></lucide-icon>
+          Edit Profile
+        </button>
+        <button type="button" class="btn-primary" (click)="changePassword()">
+          <lucide-icon [img]="icons.Lock" [size]="16"></lucide-icon>
+          Change Password
+        </button>
+      </div>
+    </section>
+
+    <section class="premium-card settings-card">
+      <div class="card-header">
+        <div class="card-icon notify"><lucide-icon [img]="icons.Bell" [size]="20"></lucide-icon></div>
+        <div>
+          <h2>Notification Preferences</h2>
+          <p>Choose which reminders you want to see</p>
+        </div>
+      </div>
+
+      <div class="toggle-list">
+        <label class="toggle-row">
+          <div>
+            <strong>Bill Due Reminders</strong>
+            <span>Get reminders before your upcoming bills are due.</span>
+          </div>
+          <input type="checkbox" [(ngModel)]="billReminders" (ngModelChange)="onNotificationChange()">
+        </label>
+
+        <label class="toggle-row">
+          <div>
+            <strong>Overdue Bill Notifications</strong>
+            <span>Stay informed when a bill becomes overdue.</span>
+          </div>
+          <input type="checkbox" [(ngModel)]="overdueNotifications" (ngModelChange)="onNotificationChange()">
+        </label>
+
+        <label class="toggle-row">
+          <div>
+            <strong>Savings Goal Reminders</strong>
+            <span>Keep your savings goals on track.</span>
+          </div>
+          <input type="checkbox" [(ngModel)]="savingsReminders" (ngModelChange)="onNotificationChange()">
+        </label>
+      </div>
+    </section>
+
+    <section class="premium-card settings-card">
+      <div class="card-header">
+        <div class="card-icon wallet"><lucide-icon [img]="icons.Wallet" [size]="20"></lucide-icon></div>
+        <div>
+          <h2>Preferences</h2>
+          <p>Adjust the way the app looks and feels</p>
+        </div>
+      </div>
+
+      <div class="field-list">
+        <label class="field-row">
+          <span>Currency</span>
+          <select [(ngModel)]="currency" (ngModelChange)="onCurrencyChange()">
+            <option value="INR">INR &#8377;</option>
+            <option value="USD">USD $</option>
+            <option value="EUR">EUR &#8364;</option>
+          </select>
+        </label>
+
+        <label class="field-row">
+          <span>Appearance</span>
+          <select [(ngModel)]="theme" (ngModelChange)="onThemeChange()">
+            <option value="light">Light Mode</option>
+            <option value="dark">Dark Mode</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="premium-card settings-card">
+      <div class="card-header">
+        <div class="card-icon account"><lucide-icon [img]="icons.Shield" [size]="20"></lucide-icon></div>
+        <div>
+          <h2>Account</h2>
+          <p>Session and sign-out controls</p>
+        </div>
+      </div>
+
+      <div class="account-row">
+        <span>Logged in as</span>
+        <strong>{{ userName }}</strong>
+      </div>
+
+      <button type="button" class="btn-outline danger-action" (click)="logout()">
+        <lucide-icon [img]="icons.LogOut" [size]="16"></lucide-icon>
+        Logout
+      </button>
+    </section>
+  </div>
+</div>

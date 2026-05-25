@@ -1,0 +1,81 @@
+<div class="dashboard-page animate-fade-in">
+  <header class="dashboard-header">
+    <div class="page-copy">
+      <h1 class="page-title">{{ overviewTitle }}</h1>
+      <p class="page-subtitle">Quick monthly overview for your family expenses.</p>
+    </div>
+    <div class="dashboard-filter">
+      <select class="dashboard-select" [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange()">
+        <option *ngFor="let option of filterOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+  </header>
+
+  <div *ngIf="isLoading" class="dashboard-loading">
+    <span class="dashboard-spinner"></span>
+    <span>Loading this month...</span>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="error-alert">
+    {{ errorMessage }}
+    <button type="button" class="btn-outline retry-button" (click)="loadDashboardData()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !errorMessage">
+    <section class="dashboard-card-grid">
+      <article class="premium-card dashboard-card">
+        <span class="card-label">Spent This Month</span>
+        <strong class="card-value danger">{{ formatCurrency(totalExpense) }}</strong>
+      </article>
+
+      <article class="premium-card dashboard-card">
+        <span class="card-label">Monthly Budget</span>
+        <strong class="card-value">{{ formatCurrency(monthlyBudget) }}</strong>
+      </article>
+
+      <article class="premium-card dashboard-card">
+        <span class="card-label">Remaining Budget</span>
+        <strong class="card-value success">{{ formatCurrency(remainingBudget) }}</strong>
+        <small>{{ remainingBudget >= 0 ? 'left' : 'over budget' }}</small>
+      </article>
+
+      <article class="premium-card dashboard-card">
+        <span class="card-label">Pending Bills</span>
+        <strong class="card-value">{{ pendingBillsCount }} {{ pendingBillsCount === 1 ? 'Bill' : 'Bills' }}</strong>
+        <small>{{ formatCurrency(pendingBillsAmount) }} Pending</small>
+      </article>
+
+      <article class="premium-card dashboard-card">
+        <span class="card-label">Savings Progress</span>
+        <strong class="card-value">{{ formatCurrency(savingsSavedAmount) }} / {{ formatCurrency(savingsTargetAmount) }}</strong>
+        <small>{{ savingsProgress | number:'1.0-0' }}% completed</small>
+      </article>
+    </section>
+
+    <section class="premium-card dashboard-chart-section">
+      <div class="section-heading">
+        <h2>Expenses by Category - This Month</h2>
+      </div>
+      <div *ngIf="categoryReport.length === 0" class="empty-state">No category spending found for {{ currentMonthLabel }}.</div>
+      <div *ngIf="categoryReport.length > 0" echarts [options]="chartOption" class="category-chart"></div>
+    </section>
+
+    <section class="premium-card quick-summary">
+      <h2>Quick Summary</h2>
+      <div class="summary-grid">
+        <div>
+          <span>Top Spending Category</span>
+          <strong>{{ topCategoryText }}</strong>
+        </div>
+        <div>
+          <span>Highest Expense</span>
+          <strong>{{ highestExpenseText }}</strong>
+        </div>
+        <div>
+          <span>Bills Due Soon</span>
+          <strong>{{ billDueSoonText }}</strong>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+</div>

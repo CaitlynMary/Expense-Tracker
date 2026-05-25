@@ -1,0 +1,77 @@
+<div class="page-shell animate-fade-in">
+  <div class="page-header">
+    <div class="page-copy">
+      <h1 class="page-title">Savings</h1>
+      <p class="page-subtitle">Track progress toward family savings goals.</p>
+    </div>
+    <button class="btn-primary" (click)="toggleForm()">
+      <lucide-icon [img]="icons.Plus" size="20"></lucide-icon>
+      Add Goal
+    </button>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-alert">{{ errorMessage }}</div>
+
+  <div *ngIf="showForm" class="premium-card stack-md">
+    <div class="card-copy">
+      <h2 class="card-title">{{ isEditing ? 'Edit Savings Goal' : 'New Savings Goal' }}</h2>
+      <p class="section-note">Track target amount, saved amount, and monthly target in one clean form.</p>
+    </div>
+    <form [formGroup]="goalForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Name</label><input formControlName="name" class="form-control"></div>
+        <div class="form-group"><label class="form-label">Target Amount</label><input type="number" step="0.01" formControlName="targetAmount" class="form-control"></div>
+        <div class="form-group"><label class="form-label">Saved Amount</label><input type="number" step="0.01" formControlName="savedAmount" class="form-control"></div>
+        <div class="form-group"><label class="form-label">Monthly Target</label><input type="number" step="0.01" formControlName="monthlyTarget" class="form-control"></div>
+        <div class="form-group"><label class="form-label">Target Date</label><input type="date" formControlName="targetDate" class="form-control"></div>
+        <div class="form-group"><label class="form-label">Notes</label><input formControlName="notes" class="form-control"></div>
+      </div>
+      <div class="form-actions"><button type="button" class="btn-outline" (click)="toggleForm()">Cancel</button><button type="submit" class="btn-primary" [disabled]="goalForm.invalid || isSaving">{{ isSaving ? 'Saving...' : 'Save' }}</button></div>
+    </form>
+  </div>
+
+  <div *ngIf="isLoading" class="premium-card empty-state surface-empty">Loading savings goals...</div>
+
+  <div *ngIf="!isLoading && !errorMessage && goals.length > 0" class="card-grid compact">
+    <div *ngFor="let goal of goals" class="premium-card stack-md">
+      <div class="card-header-row">
+        <div class="card-copy">
+          <h3 class="card-title">{{ goal.name }}</h3>
+          <p class="card-subtitle">Target: {{ goal.targetDate | date:'mediumDate' }}</p>
+        </div>
+        <div class="icon-box"><lucide-icon [img]="icons.PiggyBank" size="22"></lucide-icon></div>
+      </div>
+
+      <div class="metric-list">
+        <div class="metric-row">
+          <span>Saved</span>
+          <strong>&#8377;{{ goal.savedAmount | number:'1.2-2' }}</strong>
+        </div>
+        <div class="metric-row">
+          <span>Target</span>
+          <strong>&#8377;{{ goal.targetAmount | number:'1.2-2' }}</strong>
+        </div>
+      </div>
+
+      <div class="progress-bar">
+        <span class="progress-fill" [style.width.%]="goal.progressPercentage || 0"></span>
+      </div>
+      <p class="section-note">{{ goal.progressPercentage || 0 | number:'1.0-0' }}% completed</p>
+
+      <div class="row-actions">
+        <button class="btn-icon btn-edit" title="Edit" (click)="editGoal(goal)"><lucide-icon [img]="icons.Edit" size="18"></lucide-icon></button>
+        <button class="btn-icon btn-delete" title="Delete" (click)="deleteGoal(goal.id!)"><lucide-icon [img]="icons.Trash2" size="18"></lucide-icon></button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && goals.length === 0" class="premium-card empty-state surface-empty">No savings goals found</div>
+
+  <app-confirm-modal
+    [isOpen]="showDeleteModal"
+    title="Delete Savings Goal?"
+    message="Are you sure you want to delete this savings goal? This action cannot be undone."
+    (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()">
+  </app-confirm-modal>
+</div>

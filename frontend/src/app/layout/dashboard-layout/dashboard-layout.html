@@ -1,0 +1,9 @@
+<div class="dashboard-container" [class.sidebar-collapsed]="isSidebarCollapsed">
+  <app-sidebar [isCollapsed]="isSidebarCollapsed" class="dashboard-sidebar"></app-sidebar>
+  <div class="dashboard-main">
+    <app-navbar (toggleSidebarEvent)="toggleSidebar()"></app-navbar>
+    <main class="dashboard-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

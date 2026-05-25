@@ -1,0 +1,104 @@
+<div class="reports-page animate-fade-in">
+  <div class="reports-header">
+    <div class="page-copy">
+      <h1 class="reports-title">Reports</h1>
+      <p class="reports-subtitle">Monthly expense analysis</p>
+    </div>
+    <div class="reports-filter">
+      <select class="reports-select" [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange()">
+        <option *ngFor="let option of filterOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="reports-loading">
+    <div class="loading-spinner"></div>
+    <p>Loading reports...</p>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="reports-error">
+    <span class="error-icon">!</span>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !errorMessage">
+    <div class="summary-grid">
+      <div class="summary-card spent-card">
+        <div class="card-icon">&#8377;</div>
+        <div class="card-content">
+          <span class="card-label">Spent {{ selectedFilterLabel }}</span>
+          <span class="card-value spent-value">&#8377;{{ totalSpent | number:'1.0-0' }}</span>
+        </div>
+      </div>
+
+      <div class="summary-card category-card">
+        <div class="card-icon">#</div>
+        <div class="card-content">
+          <span class="card-label">Top Spending Category</span>
+          <span class="card-value category-value">{{ topCategory }}</span>
+        </div>
+      </div>
+
+      <div class="summary-card bills-card">
+        <div class="card-icon">&#10003;</div>
+        <div class="card-content">
+          <span class="card-label">Bills Paid</span>
+          <span class="card-value bills-value">{{ billsPaid }}</span>
+        </div>
+      </div>
+
+      <div class="summary-card saved-card">
+        <div class="card-icon">&#8377;</div>
+        <div class="card-content">
+          <span class="card-label">Money Saved</span>
+          <span class="card-value saved-value">&#8377;{{ moneySaved | number:'1.0-0' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-card">
+        <h2 class="section-title">Expense by Category</h2>
+        <p class="section-subtitle">{{ selectedFilterLabel }} breakdown</p>
+        <div *ngIf="hasCategoryData" echarts [options]="chartOption" class="donut-chart"></div>
+        <div *ngIf="!hasCategoryData" class="empty-state">
+          <span class="empty-icon">-</span>
+          <p>No expense data for this month</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="expense-list-section">
+      <h2 class="section-title">Expenses</h2>
+      <p class="section-subtitle">{{ selectedFilterLabel }} - {{ expenses.length }} transaction{{ expenses.length !== 1 ? 's' : '' }}</p>
+
+      <div *ngIf="expenses.length > 0" class="expense-table-wrapper">
+        <table class="expense-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Payment</th>
+              <th class="text-right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let expense of expenses">
+              <td class="date-cell">{{ expense.expenseDate | date:'dd MMM' }}</td>
+              <td class="title-cell">{{ expense.title }}</td>
+              <td><span class="category-badge">{{ expense.category }}</span></td>
+              <td class="payment-cell">{{ expense.paymentMethod }}</td>
+              <td class="amount-cell">&#8377;{{ expense.amount | number:'1.0-0' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="expenses.length === 0" class="empty-state">
+        <span class="empty-icon">-</span>
+        <p>No expenses recorded for this month</p>
+      </div>
+    </div>
+  </ng-container>
+</div>
