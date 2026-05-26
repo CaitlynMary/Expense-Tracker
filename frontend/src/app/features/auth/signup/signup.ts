@@ -60,7 +60,7 @@ export class Signup {
       password: this.signupForm.value.password
     };
 
-    console.log('[Signup] calling POST http://localhost:8080/api/auth/signup', {
+    console.log('[Signup] calling POST ${environment.apiUrl}/auth/signup', {
       name: payload.name,
       email: payload.email
     });
@@ -88,7 +88,7 @@ export class Signup {
 
   private getErrorMessage(err: HttpErrorResponse): string {
     if (err.status === 0) {
-      return 'Cannot connect to backend. Make sure Spring Boot is running on http://localhost:8080.';
+      return 'Cannot connect to backend. Please check your internet connection or try again later.';
     }
 
     if (typeof err.error === 'string' && err.error.trim()) {

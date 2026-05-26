@@ -245,7 +245,7 @@ export class BillList implements OnInit {
 
   private getErrorMessage(error: any, fallback: string): string {
     if (error?.status === 0) {
-      return 'Cannot connect to backend. Make sure Spring Boot is running on http://localhost:8080.';
+      return 'Cannot connect to backend. Please check your internet connection or try again later.';
     }
     if (error?.status === 401 || error?.status === 403) {
       return 'Your session is invalid or expired. Please log in again.';
