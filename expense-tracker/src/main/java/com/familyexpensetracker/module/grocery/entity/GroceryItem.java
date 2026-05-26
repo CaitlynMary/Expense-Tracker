@@ -41,7 +41,7 @@ public class GroceryItem {
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "varchar(20) default 'PENDING'")
+    @Column(nullable = false, length = 20)
     private GroceryItemStatus status = GroceryItemStatus.PENDING;
 
     @Column(name = "purchased_at")

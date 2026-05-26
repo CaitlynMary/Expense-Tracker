@@ -52,7 +52,7 @@ public class Bill {
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    @Column(name = "bill_type", nullable = false, columnDefinition = "varchar(20) default 'FIXED'")
+    @Column(name = "bill_type", nullable = false, length = 20)
     private BillType billType = BillType.FIXED;
 
     @Enumerated(EnumType.STRING)
